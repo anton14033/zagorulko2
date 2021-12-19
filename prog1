@@ -1,0 +1,120 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <locale.h>
+#include <Windows.h>
+#include <time.h>
+
+const double RAND_MAX_F = RAND_MAX;
+
+int main() {
+	int		x = 0, i = 0, case_1 = 0, j;
+	int		size_gener, len_inter_keyboard;
+	double		min_gener, max_gener;
+	double		inter_keyboard;
+	double* mas = 0;
+	int n;
+
+	setlocale(LC_ALL, "Russian");
+	srand(time(NULL));
+
+	FILE* file = fopen("text.txt", "w");
+
+	do
+	{
+		system("cls");
+		printf("Меню \"Сортировка\". Выбирете действие?\n");
+		printf("1. Сгенерировать числа\n2. Ввести с клавиатуры\n3. Копирование из файла\n");
+		scanf_s("%d", &x);
+		switch (x)
+		{
+		case 1:
+			do
+			{
+				system("cls");
+				printf("Вы выбрали \"Генерацию чисел\"\n");
+				printf("Введите кол-во элементов массива: ");
+				scanf_s("%d", &size_gener);
+				printf("Введите минимальное число: ");
+				scanf_s("%lf", &min_gener);
+				printf("Введите максимальное число: ");
+				scanf_s("%lf", &max_gener);
+				printf("\nПроверка...\n\n");
+				Sleep(1500);
+				if ((min_gener > max_gener) || (size_gener <= 0))
+				{
+					printf("Вы ввели не правильные данные. Введите снова\n");
+					Sleep(1000);
+				}
+				else
+				{
+					system("cls");
+					printf("Данные корректны.\nСейчас произойдет генерации...\n\n");
+					Sleep(1000);
+					case_1++;
+				}
+			} while (case_1 != 1);
+
+			printf("Ожидайте...\n\n");
+			Sleep(1000);
+
+			for (j = 0; j < size_gener; j++)
+			{
+				fprintf(file, "%lf\n", (rand() / RAND_MAX_F) * ((double)max_gener - (double)min_gener) + min_gener);
+			}
+
+			printf("Генерация чисел произошла\n");
+			i++;
+			break;
+		case 2:
+			system("cls");
+			printf("Вы выбрали \"Ввести с клавиатуры\"\n");
+			printf("Пожалуйста, введите кол-во элементов массива: ");
+			scanf_s("%d", &len_inter_keyboard);
+			printf("Пожалуйста, введите все нужные Вам числа (числа вводить с запятой, а не с точкой. К примеру: 6,66):\n");
+			for (j = 0; j < len_inter_keyboard; j++)
+			{
+				scanf_s("%lf", &inter_keyboard);
+				fprintf(file, "%f\n", inter_keyboard);
+			}
+			printf("\nОжидайте...\n\n");
+			Sleep(1000);
+
+			printf("Числа записаны в текстовый файл\n");
+			i++;
+			break;
+		case 3:
+			system("cls");
+			printf(" Вы выбрали копирование массива из файла\n");
+			printf(" Массив успешно скопирован из файла\n");
+			FILE* file1 = 0;
+			fopen_s(&file1,"text1.txt", "r");
+			printf("Сколько элементов содержит файл?\n");
+			scanf_s("%d", &n);
+			mas = malloc(n * sizeof(double));
+			for (i = 0; i < n; i++)
+			{
+				mas[i] = 0;
+			}
+			for (i = 0; i < n; i++)
+			{
+				fscanf_s(file1, "%lf\n", &(mas[i]));
+			}
+			fclose(file1);
+			for (i = 0; i < n; i++)
+			{
+				fprintf(file, "%lf\n", mas[i]);
+			}
+			fclose(file);
+			i++;
+			break;
+		default:
+			printf("Вы ввели не правильное число, повторите попытку\n");
+			Sleep(1000);
+			break;
+		}
+	} while (i != 1);
+
+	return 0;
+}
